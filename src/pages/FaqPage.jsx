@@ -3,7 +3,7 @@ import axios from "axios";
 import Navbar from "../views/Navbar";
 import Footer from "../views/Footer";
 
-const BASE_URL = "http://localhost:5000"; // Use env in production
+const BASE_URL = "https://od-cards-backend-z494.onrender.com"; // Use env in production
 
 const FaqPage = () => {
   const [faqData, setFaqData] = useState([]);

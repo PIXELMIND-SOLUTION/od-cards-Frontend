@@ -19,7 +19,7 @@ const ContactPage = () => {
   useEffect(() => {
     const fetchContactInfo = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/admin/get");
+        const res = await axios.get("https://od-cards-backend-z494.onrender.com/api/admin/get");
         if (res.data.success && res.data.data.length > 0) {
           setContactInfo(res.data.data[0]);
         }
@@ -56,7 +56,7 @@ const ContactPage = () => {
     const fullName = `${formData.firstName} ${formData.lastName}`.trim();
 
     try {
-      const res = await axios.post("http://localhost:5000/api/admin/contactus", {
+      const res = await axios.post("https://od-cards-backend-z494.onrender.com/api/admin/contactus", {
         name: fullName,
         email: formData.email,
         number: formData.number,

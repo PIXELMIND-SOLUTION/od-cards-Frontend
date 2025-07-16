@@ -25,7 +25,7 @@ const ViewAllReviews = () => {
 
   const fetchReviews = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/reviews/allreviews");
+      const res = await axios.get("https://od-cards-backend-z494.onrender.com/api/reviews/allreviews");
       setReviews(res.data);
     } catch (error) {
       console.error("Error fetching reviews:", error.message);
@@ -47,7 +47,7 @@ const ViewAllReviews = () => {
                       src={
                         review.image.startsWith("http")
                           ? review.image
-                          : `http://localhost:5000${review.image}`
+                          : `https://od-cards-backend-z494.onrender.com${review.image}`
                       }
                       alt={review.name}
                       className="rounded-circle me-3"

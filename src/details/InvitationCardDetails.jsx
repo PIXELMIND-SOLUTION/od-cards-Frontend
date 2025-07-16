@@ -15,7 +15,7 @@ const InvitationCardDetails = () => {
     const fetchCard = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/products/singleproduct/${id}`
+          `https://od-cards-backend-z494.onrender.com/api/products/singleproduct/${id}`
         );
         setCard(response.data.product);
         setLoading(false);

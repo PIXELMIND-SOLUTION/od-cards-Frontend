@@ -31,7 +31,7 @@ const MyCart = () => {
   // Fetch saved addresses from the API
   useEffect(() => {
     if (userId) {
-      axios.get(`http://localhost:5000/api/addresses/${userId}`)
+      axios.get(`https://od-cards-backend-z494.onrender.com/api/addresses/${userId}`)
         .then((response) => {
           setSavedAddresses(response.data);
         })
@@ -78,7 +78,7 @@ const MyCart = () => {
   };
 
   const handleAddAddress = () => {
-    axios.post(`http://localhost:5000/api/addresses/${userId}`, address)
+    axios.post(`https://od-cards-backend-z494.onrender.com/api/addresses/${userId}`, address)
       .then((response) => {
         setSavedAddresses((prev) => [...prev, response.data]);
         setShowAddressForm(false);
@@ -105,7 +105,7 @@ const MyCart = () => {
   };
 
   const handleDeleteAddress = (id) => {
-    axios.delete(`http://localhost:5000/api/addresses/${userId}/${id}`)
+    axios.delete(`https://od-cards-backend-z494.onrender.com/api/addresses/${userId}/${id}`)
       .then(() => {
         setSavedAddresses(savedAddresses.filter((address) => address._id !== id));
       })
@@ -121,7 +121,7 @@ const MyCart = () => {
   };
 
   const handleUpdateAddress = () => {
-    axios.put(`http://localhost:5000/api/addresses/${userId}/${editingAddress._id}`, address)
+    axios.put(`https://od-cards-backend-z494.onrender.com/api/addresses/${userId}/${editingAddress._id}`, address)
       .then((response) => {
         setSavedAddresses((prev) =>
           prev.map((addr) => (addr._id === editingAddress._id ? response.data : addr))

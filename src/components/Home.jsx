@@ -42,7 +42,7 @@ function Home() {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/categories/allcategories');
+                const response = await fetch('https://od-cards-backend-z494.onrender.com/api/categories/allcategories');
                 const data = await response.json();
                 if (response.ok) {
                     setCategories(data.categories);
@@ -64,7 +64,7 @@ function Home() {
     useEffect(() => {
         const fetchNewArrivals = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/products/allvisingcards');
+                const response = await fetch('https://od-cards-backend-z494.onrender.com/api/products/allvisingcards');
                 const data = await response.json();
                 if (response.ok) {
                     // Get the latest 10 products by sorting based on createdAt date
@@ -75,7 +75,7 @@ function Home() {
                             id: product._id,
                             name: product.productName,
                             image: product.images && product.images.length > 0
-                                ? `http://localhost:5000/${product.images[0].replace(/\\/g, '/')}`
+                                ? `https://od-cards-backend-z494.onrender.com/${product.images[0].replace(/\\/g, '/')}`
                                 : "https://img.freepik.com/free-vector/indian-wedding-invitation_52683-44378.jpg",
                             description: product.productCategory,
                             price: product.cardSizeMultiplier ? product.cardSizeMultiplier * 10 : 15.00, // Example pricing logic
@@ -519,7 +519,7 @@ function Home() {
         if (!validateSignUp()) return;
 
         try {
-            const response = await fetch('http://localhost:5000/api/users/register', {
+            const response = await fetch('https://od-cards-backend-z494.onrender.com/api/users/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

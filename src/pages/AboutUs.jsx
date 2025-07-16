@@ -10,7 +10,7 @@ const AboutUs = () => {
   useEffect(() => {
     // Fetch About section data
     axios
-      .get("http://localhost:5000/api/aboutus/about")
+      .get("https://od-cards-backend-z494.onrender.com/api/aboutus/about")
       .then((res) => {
         if (res.data.length > 0) {
           setAboutData(res.data[0]);
@@ -20,7 +20,7 @@ const AboutUs = () => {
 
     // Fetch Card Categories data
     axios
-      .get("http://localhost:5000/api/aboutcard/getallcards")
+      .get("https://od-cards-backend-z494.onrender.com/api/aboutcard/getallcards")
       .then((res) => {
         setCardCategories(res.data);
       })
@@ -39,7 +39,7 @@ const AboutUs = () => {
           <div className="row align-items-center mb-5">
             <div className="col-md-6 mb-4 mb-md-0">
               <img
-                src={`http://localhost:5000${aboutData.image}`}
+                src={`https://od-cards-backend-z494.onrender.com${aboutData.image}`}
                 alt="About Card Printing"
                 className="img-fluid rounded"
               />
@@ -60,7 +60,7 @@ const AboutUs = () => {
                   {/* Circular Image */}
                   <div className="col-md-6 text-center">
                     <img
-                      src={`http://localhost:5000${category.image}`}
+                      src={`https://od-cards-backend-z494.onrender.com${category.image}`}
                       alt={category.title}
                       className="rounded-circle img-fluid"
                       style={{ width: 150, height: 150, objectFit: "cover" }}

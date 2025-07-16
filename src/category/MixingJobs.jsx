@@ -18,7 +18,7 @@ const MixingJobs = () => {
   const [numberOfOrders, setNumberOfOrders] = useState(1);
 
   // Define your backend base URL
-  const BASE_URL = "http://localhost:5000";
+  const BASE_URL = "https://od-cards-backend-z494.onrender.com";
 
   // Check for mobile view
   useEffect(() => {

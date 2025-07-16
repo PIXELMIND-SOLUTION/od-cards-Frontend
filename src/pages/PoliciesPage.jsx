@@ -22,7 +22,7 @@ const PoliciesPage = () => {
 
   const fetchPolicies = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/policies/allpolicies");
+      const res = await axios.get("https://od-cards-backend-z494.onrender.com/api/policies/allpolicies");
       setPolicies(res.data || []);
       const defaultPolicy = sectionMap[section] || "Privacy Policy";
 
