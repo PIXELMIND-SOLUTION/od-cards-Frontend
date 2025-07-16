@@ -1,45 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Navbar from "../views/Navbar";
 import Footer from "../views/Footer";
 
-// 🔹 Full Mock Data (including image)
-const mockFaqData = {
-  image: "https://img.freepik.com/free-vector/people-ask-frequently-asked-questions_102902-2339.jpg",
-  faqs: [
-    {
-      question: "We provide fast on-demand printing",
-      answer:
-        "Communications det, consectetur adipiscing elit. We build and activate brands through cultural insight and strategy.",
-    },
-    {
-      question: "What is the purpose of a visiting card?",
-      answer:
-        "A visiting card provides essential contact information to grow your professional or business network.",
-    },
-    {
-      question: "How quickly can you deliver prints?",
-      answer:
-        "Our services ensure your products are made and shipped quickly, often within the same day.",
-    },
-    {
-      question: "Why use printed invitation cards?",
-      answer:
-        "They leave a tangible impression and offer a personalized, elegant way to invite guests.",
-    },
-    {
-      question: "What finishes are available?",
-      answer:
-        "We offer matte, glossy, textured, UV spot, and more — tailored to your brand style.",
-    },
-  ],
-};
+const BASE_URL = "http://localhost:5000"; // Use env in production
 
 const FaqPage = () => {
+  const [faqData, setFaqData] = useState([]);
+  const [faqImage, setFaqImage] = useState("");
   const [activeIndex, setActiveIndex] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const toggleFAQ = (index) => {
     setActiveIndex(index === activeIndex ? null : index);
   };
+
+  useEffect(() => {
+    const fetchFaqs = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}/api/admin/getallfaqs`);
+        if (response.data.success) {
+          setFaqData(response.data.data);
+          setFaqImage(`${BASE_URL}${response.data.faqImage}`);
+        }
+      } catch (error) {
+        console.error("Error fetching FAQ data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFaqs();
+  }, []);
 
   return (
     <>
@@ -48,32 +40,34 @@ const FaqPage = () => {
       <div className="container my-5">
         <h2 className="fw-bold mb-4 text-center">Frequently Asked Questions</h2>
 
-        {/* 🔹 FAQ Illustration Image from Mock Data */}
-        <div className="text-center mb-5">
-          <img
-            src={mockFaqData.image}
-            alt="FAQ Illustration"
-            className="img-fluid"
-          />
-        </div>
-
-        {/* 🔹 FAQ Items from Mock Data */}
-        {mockFaqData.faqs.map((faq, index) => (
-          <div
-            key={index}
-            className={`col-12 border rounded mb-3 p-3 bg-${activeIndex === index ? "light" : "white"}`}
-            style={{ cursor: "pointer" }}
-            onClick={() => toggleFAQ(index)}
-          >
-            <div className="d-flex justify-content-between align-items-center">
-              <strong>{faq.question}</strong>
-              <span>{activeIndex === index ? "▲" : "▼"}</span>
-            </div>
-            {activeIndex === index && (
-              <div className="mt-2 text-secondary">{faq.answer}</div>
-            )}
+        {/* FAQ Illustration */}
+        {faqImage && (
+          <div className="text-center mb-5 container">
+            <img src={faqImage} alt="FAQ Illustration" className="img-fluid w-100 h-100" />
           </div>
-        ))}
+        )}
+
+        {/* FAQs */}
+        {loading ? (
+          <div className="text-center">Loading FAQs...</div>
+        ) : (
+          faqData.map((faq, index) => (
+            <div
+              key={faq._id}
+              className={`col-12 border rounded mb-3 p-3 bg-${activeIndex === index ? "light" : "white"}`}
+              style={{ cursor: "pointer" }}
+              onClick={() => toggleFAQ(index)}
+            >
+              <div className="d-flex justify-content-between align-items-center">
+                <strong>{faq.question}</strong>
+                <span>{activeIndex === index ? "▲" : "▼"}</span>
+              </div>
+              {activeIndex === index && (
+                <div className="mt-2 text-secondary">{faq.answer}</div>
+              )}
+            </div>
+          ))
+        )}
       </div>
 
       <Footer />
