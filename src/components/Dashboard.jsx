@@ -18,7 +18,7 @@ function Dashboard() {
     const [marquees, setMarquees] = useState([]);
 
     useEffect(() => {
-        axios.get('http://localhost:5000/api/marquees/getall')
+        axios.get('https://od-cards-backend-z494.onrender.com/api/marquees/getall')
             .then((response) => {
                 if (response.data.marquees) {
                     setMarquees(response.data.marquees);
@@ -31,7 +31,7 @@ function Dashboard() {
 
 
     useEffect(() => {
-        axios.get('http://localhost:5000/api/banners/getallbanners')
+        axios.get('https://od-cards-backend-z494.onrender.com/api/banners/getallbanners')
             .then(response => {
                 if (response.data.banners && response.data.banners.length > 0) {
                     setBannerData(response.data.banners[0]);
@@ -47,7 +47,7 @@ function Dashboard() {
 
     // Fetch review data on mount
     useEffect(() => {
-        axios.get('http://localhost:5000/api/reviews/allreviews')
+        axios.get('https://od-cards-backend-z494.onrender.com/api/reviews/allreviews')
             .then(response => {
                 setReviewData(response.data || []);
             })
@@ -306,7 +306,7 @@ function Dashboard() {
                                 className={`carousel-item ${index === 0 ? 'active' : ''}`}
                             >
                                 <img
-                                    src={`http://localhost:5000/uploads/banners/${img}`}
+                                    src={`https://od-cards-backend-z494.onrender.com/uploads/banners/${img}`}
                                     className="d-block w-100"
                                     alt={`Slide ${index + 1}`}
                                     style={{ height: '100vh', objectFit: 'cover' }}
@@ -653,7 +653,7 @@ function Dashboard() {
                                 <div className="card-body p-4">
                                     <div className="d-flex align-items-center mb-3">
                                         <img
-                                            src={`http://localhost:5000${review.image}`}
+                                            src={`https://od-cards-backend-z494.onrender.com${review.image}`}
                                             alt={review.name}
                                             className="rounded-circle me-3"
                                             width="60"
