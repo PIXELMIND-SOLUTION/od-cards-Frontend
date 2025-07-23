@@ -3,6 +3,7 @@ import Footer from "../views/Footer";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import OrderModal from "../details/orderModal";
+import axios from 'axios';
 
 function Dashboard() {
     const navigate = useNavigate();
@@ -13,6 +14,54 @@ function Dashboard() {
     const [newArrivals, setNewArrivals] = useState([]);
     const [loadingNewArrivals, setLoadingNewArrivals] = useState(true);
     const [newArrivalsError, setNewArrivalsError] = useState(null);
+    const [bannerData, setBannerData] = useState(null);
+    const [marquees, setMarquees] = useState([]);
+
+    useEffect(() => {
+        axios.get('http://localhost:5000/api/marquees/getall')
+            .then((response) => {
+                if (response.data.marquees) {
+                    setMarquees(response.data.marquees);
+                }
+            })
+            .catch((error) => {
+                console.error('Error fetching marquee items:', error);
+            });
+    }, []);
+
+
+    useEffect(() => {
+        axios.get('http://localhost:5000/api/banners/getallbanners')
+            .then(response => {
+                if (response.data.banners && response.data.banners.length > 0) {
+                    setBannerData(response.data.banners[0]);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching banner data:', error);
+            });
+    }, []);
+
+    const [reviewData, setReviewData] = useState([]);
+    const scrollRef = useRef(null);
+
+    // Fetch review data on mount
+    useEffect(() => {
+        axios.get('http://localhost:5000/api/reviews/allreviews')
+            .then(response => {
+                setReviewData(response.data || []);
+            })
+            .catch(error => {
+                console.error('Error fetching reviews:', error);
+            });
+    }, []);
+
+    // Scroll handler
+    const scrollByAmount = (amount) => {
+        if (scrollRef.current) {
+            scrollRef.current.scrollBy({ left: amount, behavior: 'smooth' });
+        }
+    };
 
     // Fetch categories on component mount
     useEffect(() => {
@@ -164,41 +213,6 @@ function Dashboard() {
         },
     ];
 
-    const reviewData = [
-        {
-            name: "Priya Sharma",
-            image: "https://randomuser.me/api/portraits/women/32.jpg",
-            rating: 5,
-            text: "The wedding cards I ordered were absolutely stunning! The quality exceeded my expectations and the customization options were fantastic. Highly recommend!"
-        },
-        {
-            name: "Rahul Patel",
-            image: "https://randomuser.me/api/portraits/men/45.jpg",
-            rating: 4.5,
-            text: "Excellent service! The business cards I got really stand out and have helped me make great first impressions. Fast delivery and great customer support."
-        },
-        {
-            name: "Ananya Gupta",
-            image: "https://randomuser.me/api/portraits/women/68.jpg",
-            rating: 5,
-            text: "The invitation cards for my daughter's birthday were perfect! The design team helped me create exactly what I envisioned. Will definitely order again."
-        },
-        {
-            name: "Amit Verma",
-            image: "https://randomuser.me/api/portraits/men/12.jpg",
-            rating: 4,
-            text: "Great print quality and reasonable pricing. Customer service was helpful throughout."
-        },
-        {
-            name: "Sneha Reddy",
-            image: "https://randomuser.me/api/portraits/women/54.jpg",
-            rating: 5,
-            text: "Impressed with the variety of designs and timely delivery. Smooth process from start to end."
-        },
-    ];
-
-
-    const scrollRef = useRef();
 
     // Auto scroll effect
     useEffect(() => {
@@ -220,9 +234,6 @@ function Dashboard() {
         return () => clearInterval(scrollInterval);
     }, []);
 
-    const scrollByAmount = (amount) => {
-        scrollRef.current?.scrollBy({ left: amount, behavior: "smooth" });
-    };
 
     const handleCategoryClick = (category) => {
         const formattedName = category.toLowerCase().replace(/\s+/g, '-');
@@ -244,7 +255,7 @@ function Dashboard() {
     };
 
     const handleNewArrivals = () => {
-        
+
     };
 
     const handleImageClick = (id, category) => {
@@ -260,68 +271,67 @@ function Dashboard() {
     return (
         <>
             <Navbar />
+
             <div className="container-fluid p-0 mt-0">
-                <div className="bg-danger text-white py-2  ">
-                    <marquee behavior="scroll" direction="left" scrollamount="6" className="fw-semibold">
-                        <i className="fa-solid fa-envelope me-2"></i>20+ Visiting Cards &nbsp;&nbsp;&nbsp;
-                        <i className="fa-solid fa-envelope me-2"></i>30+ Wedding Cards &nbsp;&nbsp;&nbsp;
-                        <i className="fa-solid fa-envelope me-2"></i>20+ Invitation Cards &nbsp;&nbsp;&nbsp;
-                        <i className="fa-solid fa-envelope me-2"></i>10+ Mixing Job Cards &nbsp;&nbsp;&nbsp;
-                        <i className="fa-solid fa-envelope me-2"></i>20+ Flute Board Printing Cards &nbsp;&nbsp;&nbsp;
-                        <i className="fa-solid fa-envelope me-2"></i>30+ Special Cards
+                <div className="bg-danger text-white py-2">
+                    <marquee
+                        behavior="scroll"
+                        direction="left"
+                        scrollAmount="6"
+                        className="fw-semibold"
+                    >
+                        {marquees.map((item, index) => (
+                            <span key={index}>
+                                <i className={`fa-solid ${item.icon || 'fa-envelope'} me-2`}></i>
+                                {item.text}
+                                &nbsp;&nbsp;&nbsp;
+                            </span>
+                        ))}
                     </marquee>
                 </div>
             </div>
 
             <div className="container-fluid p-0 position-relative">
-                {/* Carousel Background with Auto Scroll */}
+                {/* Carousel */}
                 <div
                     id="weddingCarousel"
                     className="carousel slide carousel-fade"
                     data-bs-ride="carousel"
-                    data-bs-interval="3000"   // Auto-scroll every 3 seconds
+                    data-bs-interval="3000"
                 >
                     <div className="carousel-inner">
-                        <div className="carousel-item active">
-                            <img
-                                src="https://img.freepik.com/free-vector/gradient-golden-floral-wedding-invitation_52683-60511.jpg"
-                                className="d-block w-100"
-                                alt="Slide 1"
-                                style={{ height: '100vh', objectFit: 'cover' }}
-                            />
-                        </div>
-                        <div className="carousel-item">
-                            <img
-                                src="https://img.freepik.com/free-vector/floral-engagement-invitation-template_52683-44893.jpg"
-                                className="d-block w-100"
-                                alt="Slide 2"
-                                style={{ height: '100vh', objectFit: 'cover' }}
-                            />
-                        </div>
-                        <div className="carousel-item">
-                            <img
-                                src="https://img.freepik.com/free-vector/indian-wedding-invitation_52683-44378.jpg"
-                                className="d-block w-100"
-                                alt="Slide 3"
-                                style={{ height: '100vh', objectFit: 'cover' }}
-                            />
-                        </div>
+                        {bannerData?.images?.map((img, index) => (
+                            <div
+                                key={index}
+                                className={`carousel-item ${index === 0 ? 'active' : ''}`}
+                            >
+                                <img
+                                    src={`http://localhost:5000/uploads/banners/${img}`}
+                                    className="d-block w-100"
+                                    alt={`Slide ${index + 1}`}
+                                    style={{ height: '100vh', objectFit: 'cover' }}
+                                />
+                            </div>
+                        ))}
                     </div>
                 </div>
 
-                {/* Dark Overlay */}
-                <div className="position-absolute top-0 start-0 w-100 h-100" style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)', zIndex: 1 }}></div>
+                {/* Overlay */}
+                <div
+                    className="position-absolute top-0 start-0 w-100 h-100"
+                    style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)', zIndex: 1 }}
+                ></div>
 
-                {/* Text Content Left-Aligned */}
-                <div className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center" style={{ zIndex: 2 }}>
+                {/* Text Content */}
+                <div
+                    className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center"
+                    style={{ zIndex: 2 }}
+                >
                     <div className="container px-4">
                         <div className="row">
                             <div className="col-sm-12 text-white">
-                                <h1 className="fw-bold mb-4">Find The Best Frame For Treasured Moments.</h1>
-                                <p className="mb-4">
-                                    Elevate your brand with premium card printing—custom designs, high-quality materials, and cutting-edge technology tailored to your needs.
-                                    From offset to digital, we choose the ideal technique based on time, color, quantity, and finish for perfect, vibrant results every time.
-                                </p>
+                                <h1 className="fw-bold mb-4">{bannerData?.title}</h1>
+                                <p className="mb-4">{bannerData?.content}</p>
                                 <button
                                     className="btn btn-lg"
                                     style={{
@@ -337,9 +347,6 @@ function Dashboard() {
                     </div>
                 </div>
             </div>
-
-
-
 
             <div className="container-fluid p-5 bg-light">
                 <div className="row align-items-center text-center  text-md-start mb-4">
@@ -601,9 +608,9 @@ function Dashboard() {
                 </div>
             </div>
 
-            {/*Reviews Section */}
             <div className="container-fluid py-5 bg-light">
                 <div className="container">
+                    {/* Title */}
                     <div className="row justify-content-center mb-4">
                         <div className="col-12 text-center">
                             <h2 className="fw-bold">What Our Customers Say</h2>
@@ -619,7 +626,8 @@ function Dashboard() {
                                 background: 'linear-gradient(to right, #F8483C, #DE2B59)',
                                 color: 'white',
                             }}
-                            onClick={() => scrollByAmount(-320)}>
+                            onClick={() => scrollByAmount(-320)}
+                        >
                             &#8592;
                         </button>
                         <button
@@ -628,12 +636,13 @@ function Dashboard() {
                                 background: 'linear-gradient(to right, #F8483C, #DE2B59)',
                                 color: 'white',
                             }}
-                            onClick={() => scrollByAmount(320)}>
+                            onClick={() => scrollByAmount(320)}
+                        >
                             &#8594;
                         </button>
                     </div>
 
-                    {/* Horizontal Scroll Container */}
+                    {/* Review Cards */}
                     <div
                         ref={scrollRef}
                         className="d-flex overflow-auto gap-3 pb-3"
@@ -644,7 +653,7 @@ function Dashboard() {
                                 <div className="card-body p-4">
                                     <div className="d-flex align-items-center mb-3">
                                         <img
-                                            src={review.image}
+                                            src={`http://localhost:5000${review.image}`}
                                             alt={review.name}
                                             className="rounded-circle me-3"
                                             width="60"
@@ -662,13 +671,13 @@ function Dashboard() {
                                             </div>
                                         </div>
                                     </div>
-                                    <p className="card-text small">"{review.text}"</p>
+                                    <p className="card-text small">"{review.comment}"</p>
                                 </div>
                             </div>
                         ))}
                     </div>
 
-                    {/* View All Reviews Button */}
+                    {/* View All Button */}
                     <div className="row mt-4">
                         <div className="col-12 text-center">
                             <button
